@@ -1,5 +1,9 @@
 #include"snakeAPI.h"
+#include"arena.h"
 #include<stdlib.h>
+
+
+// runCGS Snake -p 1234 -w 8080  --no-email
 
 int main(){
 
@@ -11,17 +15,22 @@ int main(){
     int ArenasizeY;
     int nbWalls;
 
-    char comment[250];
-    printf("type your comment (no space)\n");
-    scanf("%s",comment);
+    // char comment[250];
+    // printf("type your comment (no space)\n");
+    // scanf("%s",comment);
 
     printf("queueing\n");
     waitForSnakeGame("TRAINING RANDOM_PLAYER",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
     printf("game found\n");
-    //printf("game info : %s, %d*%d, %d walls\n", gameName,*ArenasizeX,*ArenasizeX,*nbWalls);
+
+    int H = ArenasizeY;
+    int L = ArenasizeX;
+    int** arena;
+
+    // printf("game info : %s, %d*%d, %d walls\n", gameName,ArenasizeX,ArenasizeX,nbWalls);
     
     int* walls;
-    walls=(int*)malloc(nbWalls*sizeof(int));
+    walls=(int*)malloc(4*nbWalls*sizeof(int));
 
     int order =getSnakeArena(walls);
     if (order==0){
@@ -32,29 +41,25 @@ int main(){
     }
 
 
-    // free(walls);
 
-
-    // int H = ArenasizeY;
-    // int L = ArenasizeX;
-    // int** arena;
-    // arena=(int**)malloc(sizeof(int*)*L);
-    // for (int i=0;i<H;i++){
-    //     // arena[i]=(int*)malloc(sizeof(int)*H);
-    // }
-
-    // for (int j=0;j<H;j++){
-    //     for (int i=0;i<L;i++){
-    //         printf("0 ");
-    //     }
-    //     printf("\n");
-    // }
+    arena=setupTHEarena(H,L,nbWalls,walls);
+    printTHEarena(arena,H,L);
 
 
 
-    // for(int i=0;i<H;i++)
-    //     free(arena[i]);
-    // free(arena);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -69,9 +74,17 @@ int main(){
     
     while(1){
         
+        
+
+        
+
 
         if (order==0){
             printArena();
+
+            printf("OUUUAH TOUT MARCHE\n");
+            break;
+
             printf("your move : NORTH=0/EAST=1/SOUTH=2/WEST=3\n");
             
 
@@ -117,13 +130,10 @@ int main(){
 
     }
 
-    // if ((state==-1 && order==0) || (state==-1 && order==1)){
-    //     printf("you lose\n");
-    // }
-    // else{
-    //     printf("you win\n");
-    // }
 
-    free(walls);    
+    freeTHEarena(arena,H,L);
+    printf("free arena ok\n");
+    free(walls);   
+    printf("free walls ok\n");
     closeConnection();  
 }
