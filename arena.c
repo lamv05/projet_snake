@@ -2,7 +2,17 @@
 #include"arena.h"
 #include<stdlib.h>
 
+typedef struct cell_{
+    int wall_up;
+    int wall_down;
+    int wall_right;
+    int wall_left;
+    int occupied;
 
+}cell;
+
+
+// int version
 void printTHEarena(int** arena,int H,int L){
     for (int i=0;i<H;i++){
         for (int j=0;j<L;j++){
@@ -24,7 +34,7 @@ int** setupTHEarena(int H,int L,int nbWalls,int* walls){
             arena[i][j]=0;
         }
     }
-    for (int i=0;i<4*(nbWalls);i=i+2){
+    for (int i=0;i<4*(nbWalls);i=i+2){ //4*(nbWalls)
             
             // arena[walls[i+1]][walls[i]] = 1; 
             // printf("%d %d\n",walls[i],walls[i+1]);
