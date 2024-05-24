@@ -1,6 +1,8 @@
 #include"snakeAPI.h"
 #include"arena.h"
+#include"ai.h"
 #include<stdlib.h>
+#include"snake.h"
 
 
 // runCGS Snake -p 1234 -w 8080  --no-email
@@ -25,52 +27,58 @@ int main(){
 
     int H = ArenasizeY;
     int L = ArenasizeX;
+    int** arenaSnake;
+    int** arenaWall;
     int** arena;
 
-    // printf("game info : %s, %d*%d, %d walls\n", gameName,ArenasizeX,ArenasizeX,nbWalls);
+     printf("game info : %s, %d*%d, %d walls\n", gameName,ArenasizeX,ArenasizeY,nbWalls);
     
+    int position[1]; //careful with odd or pair
     int* walls;
     walls=(int*)malloc(4*nbWalls*sizeof(int));
 
     int order =getSnakeArena(walls);
     if (order==0){
         printf("you start\n");
+        position[0]=2;
     }
     else{
         printf("bot starts\n");
+        position[0]=L-3;
     }
 
+    if (H%2==0){
+        position[1]=(H/2);
+    }
+    else{
+        position[1]=(H-1)/2;
+    }
 
+// ok up to here
 
-    arena=setupTHEarena(H,L,nbWalls,walls);
-    printTHEarena(arena,H,L);
-
-
-
-
-
-
-
-
-
-
+    snakeCell* my_snake_head=init_snake(position[0],position[1]);
+    printf("init_snake ok\n");
 
 
 
 
-
-
-
-
-
-
+    arenaSnake=init_arena(H,L);
+    arenaWall=init_arena(H,L);
+    arena=init_arena(H,L);
+    printf("setup ok\n");
+    fill_snake(arenaSnake,my_snake_head,H,L);
+    printTHEarena(arenaSnake,H,L);
+    fill_walls(arenaWall,nbWalls,walls);
+    printTHEarena(arenaWall,H,L);
 
     int Gamestate=0;
-    int moveInt;
+    int moveInt=4;
     t_move move,moveOpponent;
 
     // int oui=0;
     //scanf("%d",&oui);
+
+    printArena();
     
     while(1){
         
@@ -80,21 +88,33 @@ int main(){
 
 
         if (order==0){
-            printArena();
+            // printArena();
 
-            printf("OUUUAH TOUT MARCHE\n");
-            break;
+            // printf("OUUUAH TOUT MARCHE\n");
+            // break;
 
-            printf("your move : NORTH=0/EAST=1/SOUTH=2/WEST=3\n");
+            fill_snake(arenaSnake,my_snake_head,H,L);
+            printTHEarena(arenaSnake,H,L);
+            merge_arenas(arenaSnake,arenaWall,arena,H,L);
+            printTHEarena(arena,H,L);
+            displaySnake(my_snake_head);
+
+            // printf("your move : NORTH=0/EAST=1/SOUTH=2/WEST=3\n");
             
 
             // scanf("%d",(int*)&move);
             scanf("%d",&moveInt);
+            // moveInt=0;
+            // moveInt=findMove(arena,position,H,L,(int)move);
+            
+        
+
             move =(t_move)moveInt;
                 
             Gamestate=sendMove(move);
+            snake_move(my_snake_head,moveInt);
             
-            
+            printf("move sent\n");
             
         }
         else{
@@ -130,7 +150,8 @@ int main(){
 
     }
 
-
+    free_snake(my_snake_head);
+    printf("free snake ok\n");
     freeTHEarena(arena,H,L);
     printf("free arena ok\n");
     free(walls);   

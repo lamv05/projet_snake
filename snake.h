@@ -6,8 +6,14 @@ typedef struct snakeCell_{
     struct snakeCell_* nextCell;
 }snakeCell;
 
-void init_snake(snakeCell* head,int x,int y);
+snakeCell* init_snake(int x,int y);
 
 void snake_move(snakeCell* head,int move);
 
 void add_cell(snakeCell* head,int x,int y);
+
+void fill_snake(int** arena,snakeCell* head,int H,int L);
+
+void displaySnake(snakeCell* head);
+
+void free_snake(snakeCell* head);

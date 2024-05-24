@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include"arena.h"
 #include<stdlib.h>
+#include"snake.h"
 
 typedef struct cell_{
     int wall_up;
@@ -20,9 +21,10 @@ void printTHEarena(int** arena,int H,int L){
         }
         printf("\n");
     }
+    printf("\n");
 }
 
-int** setupTHEarena(int H,int L,int nbWalls,int* walls){
+int** init_arena(int H,int L){
     int** arena;
     // int wallprinted=0;
     arena=(int**)malloc(sizeof(int*)*L);
@@ -34,6 +36,11 @@ int** setupTHEarena(int H,int L,int nbWalls,int* walls){
             arena[i][j]=0;
         }
     }
+    return arena;
+}
+
+void fill_walls(int** arena,int nbWalls,int* walls){
+
     for (int i=0;i<4*(nbWalls);i=i+2){ //4*(nbWalls)
             
             // arena[walls[i+1]][walls[i]] = 1; 
@@ -43,7 +50,18 @@ int** setupTHEarena(int H,int L,int nbWalls,int* walls){
             
         }
         // printf("wall printed %d/%d\n",wallprinted/2,nbWalls);
-    return arena;
+    
+}
+
+void fill_snake(int** arena,snakeCell* head,int H,int L){
+    refresh_arena(arena,H,L);
+    snakeCell* head_tmp=head;
+    arena[head_tmp->x][head_tmp->y]=9;
+    while (head_tmp->nextCell!=NULL){
+        head_tmp=head_tmp->nextCell;
+        arena[head_tmp->x][head_tmp->y]=9;
+        
+    }
 }
 
 void freeTHEarena(int** arena,int H,int L){
@@ -53,3 +71,22 @@ void freeTHEarena(int** arena,int H,int L){
     free(arena);
 }
 
+void refresh_arena(int** arena,int H,int L){
+    // int wallprinted=0;
+    for (int i=0;i<L;i++){
+        for (int j=0;j<H;j++){
+            arena[i][j]=0;
+        }
+    }
+}
+
+void merge_arenas(int** arenaSnake,int** arenaWall,int** arena,int H,int L){
+    for(int i=0;i<L;i++){
+        for(int j=0;j<H;j++){
+            arena[i][j]=arenaWall[i][j];
+            if (arenaSnake[i][j]!=0){
+                arena[i][j]=arenaSnake[i][j];
+            }
+        }
+    }
+}
