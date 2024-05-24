@@ -36,6 +36,10 @@ int** init_arena(int H,int L){
             arena[i][j]=0;
         }
     }
+    // arena[0][0]=9;
+    // arena[L-1][0]=8;
+    // arena[0][H-1]=7;
+    // arena[L-1][H-1]=6;
     return arena;
 }
 
@@ -53,9 +57,16 @@ void fill_walls(int** arena,int nbWalls,int* walls){
     
 }
 
-void fill_snake(int** arena,snakeCell* head,int H,int L){
+void fill_snake(int** arena,snakeCell* head,snakeCell* oppenent_head,int H,int L){
     refresh_arena(arena,H,L);
     snakeCell* head_tmp=head;
+    arena[head_tmp->x][head_tmp->y]=9;
+    while (head_tmp->nextCell!=NULL){
+        head_tmp=head_tmp->nextCell;
+        arena[head_tmp->x][head_tmp->y]=9;
+        
+    }
+    head_tmp=oppenent_head;
     arena[head_tmp->x][head_tmp->y]=9;
     while (head_tmp->nextCell!=NULL){
         head_tmp=head_tmp->nextCell;
@@ -85,7 +96,7 @@ void merge_arenas(int** arenaSnake,int** arenaWall,int** arena,int H,int L){
         for(int j=0;j<H;j++){
             arena[i][j]=arenaWall[i][j];
             if (arenaSnake[i][j]!=0){
-                arena[i][j]=arenaSnake[i][j];
+                arena[i][j]+=arenaSnake[i][j];
             }
         }
     }

@@ -1,0 +1,1 @@
+int findMove(int** arena,int* position,int H,int L,int lastMove);
