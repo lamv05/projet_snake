@@ -12,6 +12,87 @@ typedef struct cell_{
 
 }cell;
 
+// int tab[5] version
+
+int*** init_arena_tab(int H,int L){
+    int***arena;
+    arena=(int***)malloc(sizeof(int**)*L);
+    for (int i=0;i<L;i++){
+        arena[i]=(int**)malloc(sizeof(int*)*H);
+        for (int j=0;j<H;j++){
+            arena[i][j]=(int*)malloc(sizeof(int)*5);
+        }
+    }
+    for (int i=0;i<L;i++){
+        for (int j=0;j<H;j++){
+            for(int k=0;k<5;k++){
+                arena[i][j][k]=0;
+            }
+        }
+    }
+    return arena;
+}
+
+
+void free_arena_tab(int*** arena,int H,int L){
+    for(int i=0;i<L;i++){
+        for(int j=0;j<H;j++){
+            free(arena[i][j]);
+        }
+        free(arena[i]);
+    }
+    free(arena);
+}
+
+void print_arena_tab(int*** arena,int H,int L){
+    for (int i=0;i<H;i++){
+        for (int j=0;j<L;j++){
+            printf("{%d,%d,%d,%d,%d} ",arena[j][i][0],arena[j][i][1],arena[j][i][2],arena[j][i][3],arena[j][i][4]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+// {wall up, wall right, wall down, wall left, occupied by snake}
+
+void fill_arena_tab(int*** arena,int nbWalls,int* walls){
+    int xi,yi,xi_1,yi_1,flag=0;
+    for (int i=0;i< 4*(nbWalls);i=i+2){ // 4*(nbWalls)
+        if(flag==0){
+            xi=walls[i];
+            yi=walls[i+1];
+            xi_1=walls[i+2];
+            yi_1=walls[i+3];
+            flag=1;
+
+            // printf("xi:%d,yi:%d,xi_1:%d,yi_1:%d\n",xi,yi,xi_1,yi_1);
+        }
+        else{
+            xi=walls[i];
+            yi=walls[i+1];
+            xi_1=walls[i-2];
+            yi_1=walls[i-1];
+            flag=0;
+        }
+        
+        if (yi>yi_1){ // wall up case
+            arena[xi][yi][0]=1;
+        }
+        else if (xi<xi_1){ // wall right case
+            arena[xi][yi][1]=2;
+        }
+        else if (yi<yi_1){ // wall down case
+            arena[xi][yi][2]=3;
+        }
+        else if(xi>xi_1){ // wall left case
+            arena[xi][yi][3]=4; 
+        }
+          
+    }
+
+    
+}
 
 // int version
 void printTHEarena(int** arena,int H,int L){

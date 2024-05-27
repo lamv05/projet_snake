@@ -84,6 +84,13 @@ int main(){
     // int oui=0;
     //scanf("%d",&oui);
 
+    printf("arena tab init\n");
+    int*** arena_tab=init_arena_tab(H,L);
+    print_arena_tab(arena_tab,H,L);
+    fill_arena_tab(arena_tab,nbWalls,walls);
+    print_arena_tab(arena_tab,H,L);
+    free_arena_tab(arena_tab,H,L);
+
     
     while(1){
         
@@ -93,8 +100,8 @@ int main(){
             position[0]=my_snake_head->x;
             position[1]=my_snake_head->y;
 
-            // printf("OUUUAH TOUT MARCHE\n");
-            // break;
+            printf("OUUUAH TOUT MARCHE\n");
+            break;
 
             fill_snake(arenaSnake,my_snake_head,oppenent_snake_head,H,L);
             // printTHEarena(arenaSnake,H,L);
