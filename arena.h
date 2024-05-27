@@ -17,3 +17,5 @@ void free_arena_tab(int*** arena,int H,int L);
 void print_arena_tab(int*** arena,int H,int L);
 
 void fill_arena_tab(int*** arena,int nbWalls,int* walls);
+
+void merge_arenas_tab(int*** arena,int*** arenaWall,int** arenaSnake,int H,int L);

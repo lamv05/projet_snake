@@ -23,10 +23,26 @@ int*** init_arena_tab(int H,int L){
             arena[i][j]=(int*)malloc(sizeof(int)*5);
         }
     }
-    for (int i=0;i<L;i++){
+    for (int i=0;i<L;i++){ //fill with borders
         for (int j=0;j<H;j++){
             for(int k=0;k<5;k++){
-                arena[i][j][k]=0;
+                if (i==0 && k==3){
+                    arena[i][j][k]=1;
+                }
+                else if(j==0 && k==0){
+                    arena[i][j][k]=1;
+                }
+                else if(i==L-1 && k==1){
+                    arena[i][j][k]=1;
+                }
+                else if(j==H-1 && k==2){
+                    arena[i][j][k]=1;
+                }
+                else{
+                    arena[i][j][k]=0;
+                }
+                
+                
             }
         }
     }
@@ -80,18 +96,29 @@ void fill_arena_tab(int*** arena,int nbWalls,int* walls){
             arena[xi][yi][0]=1;
         }
         else if (xi<xi_1){ // wall right case
-            arena[xi][yi][1]=2;
+            arena[xi][yi][1]=1;
         }
         else if (yi<yi_1){ // wall down case
-            arena[xi][yi][2]=3;
+            arena[xi][yi][2]=1;
         }
         else if(xi>xi_1){ // wall left case
-            arena[xi][yi][3]=4; 
+            arena[xi][yi][3]=1; 
         }
           
     }
 
     
+}
+
+void merge_arenas_tab(int*** arena,int*** arenaWall,int** arenaSnake,int H,int L){
+    for(int i=0;i<L;i++){
+        for(int j=0;j<H;j++){
+            arena[i][j]=arenaWall[i][j];
+            if (arenaSnake[i][j]!=0){
+                arena[i][j][4]=1;
+            }
+        }
+    }
 }
 
 // int version
@@ -141,17 +168,17 @@ void fill_walls(int** arena,int nbWalls,int* walls){
 void fill_snake(int** arena,snakeCell* head,snakeCell* oppenent_head,int H,int L){
     refresh_arena(arena,H,L);
     snakeCell* head_tmp=head;
-    arena[head_tmp->x][head_tmp->y]=9;
+    arena[head_tmp->x][head_tmp->y]=1;
     while (head_tmp->nextCell!=NULL){
         head_tmp=head_tmp->nextCell;
-        arena[head_tmp->x][head_tmp->y]=9;
+        arena[head_tmp->x][head_tmp->y]=1;
         
     }
     head_tmp=oppenent_head;
-    arena[head_tmp->x][head_tmp->y]=9;
+    arena[head_tmp->x][head_tmp->y]=1;
     while (head_tmp->nextCell!=NULL){
         head_tmp=head_tmp->nextCell;
-        arena[head_tmp->x][head_tmp->y]=9;
+        arena[head_tmp->x][head_tmp->y]=1;
         
     }
 }

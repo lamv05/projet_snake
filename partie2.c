@@ -85,10 +85,17 @@ int main(){
     //scanf("%d",&oui);
 
     printf("arena tab init\n");
+
     int*** arena_tab=init_arena_tab(H,L);
+    int*** arenaWall_tab=init_arena_tab(H,L);
+
+    // print_arena_tab(arena_tab,H,L);
+    fill_arena_tab(arenaWall_tab,nbWalls,walls);
+    merge_arenas_tab(arena_tab,arenaWall_tab,arenaSnake,H,L);
     print_arena_tab(arena_tab,H,L);
-    fill_arena_tab(arena_tab,nbWalls,walls);
-    print_arena_tab(arena_tab,H,L);
+
+
+    // free_arena_tab(arenaWall_tab,H,L);
     free_arena_tab(arena_tab,H,L);
 
     
