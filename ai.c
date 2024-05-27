@@ -129,3 +129,86 @@ int findMove(int** arena,int* position,int H,int L,int lastMoveInt){
     
     return max;
 }
+
+int find_move_v2(int*** arena,int* position,int H,int L,int lastMoveInt){
+
+    if (lastMoveInt==0)
+        printf("last move was north (0)\n");
+    else if (lastMoveInt==1)
+        printf("last move was east (1)\n");
+    else if (lastMoveInt==2)
+        printf("last move was south (2)\n");
+    else   
+        printf("last move was west (3)\n");
+    int scoreMove[4]; // [north,east,south,west]
+    for (int i=0;i<4;i++){
+        scoreMove[i]=1;
+    }
+    int* currentPosition=arena[position[0]][position[1]];
+    
+    
+    // CHECK FORBIDDEN MOVES
+
+    // no backward
+    if (lastMoveInt==0){
+        scoreMove[2]=0;
+    }
+    else if (lastMoveInt==1){
+        scoreMove[3]=0;
+    }
+    else if (lastMoveInt==2){
+        scoreMove[0]=0;
+    }
+    else if (lastMoveInt==3){
+        scoreMove[1]=0;
+    }
+
+    // no wall
+
+    for(int i=0;i<5;i++){
+        if (i<4){
+            if (currentPosition[i]==1){
+                scoreMove[i]=0;
+            }
+        }
+        else if (position[0]==0 || position[0]==L-1 || position[1]==0 || position[1]==H-1)
+            break;
+        else{
+            printf("got in snake check\n");
+            for (int j=0;j<4;j++){
+                if (j==0 && arena[position[0]][position[1]-1][5]==1){
+                    scoreMove[i]=0;
+                }
+                else if(j==1 && arena[position[0]+1][position[1]][5]==1){
+                    scoreMove[i]=0;
+                }
+                else if(j==2 && arena[position[0]][position[1]+1][5]==1){
+                    scoreMove[i]=0;
+                }
+                else if(j==3 && arena[position[0]-1][position[1]][5]==1){
+                    scoreMove[i]=0;
+                }
+            }
+        }
+    }
+
+    int max=scoreMove[0];
+    int max_indice=0;
+    for (int i=0;i<4;i++){
+        if(scoreMove[i]>max){
+            max=scoreMove[i];
+            max_indice=i;
+        }
+    }
+    
+    if (max_indice==0)
+        printf("ai would go north (0)\n");
+    else if (max_indice==1)
+        printf("ai would go east (1)\n");
+    else if (max_indice==2)
+        printf("ai would go south (2)\n");
+    else   
+        printf("ai would go west (3)\n");
+    
+    return max_indice;
+}

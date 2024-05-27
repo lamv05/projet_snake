@@ -22,14 +22,14 @@ int main(){
     // scanf("%s",comment);
 
     printf("queueing\n");
-    waitForSnakeGame("TRAINING RANDOM_PLAYER",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
+    waitForSnakeGame("TRAINING RANDOM_PLAYER difficulty=2 timeout=100 seed=14 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
     printf("game found\n");
 
     int H = ArenasizeY;
     int L = ArenasizeX;
     int** arenaSnake;
-    int** arenaWall;
-    int** arena;
+    // int** arenaWall;
+    // int** arena;
 
      printf("game info : %s, %d*%d, %d walls\n", gameName,ArenasizeX,ArenasizeY,nbWalls);
     
@@ -68,12 +68,12 @@ int main(){
 
 
     arenaSnake=init_arena(H,L);
-    arenaWall=init_arena(H,L);
-    arena=init_arena(H,L);
-    printf("setup ok\n");
+    // arenaWall=init_arena(H,L);
+    // arena=init_arena(H,L);
+    // printf("setup ok\n");
     fill_snake(arenaSnake,my_snake_head,oppenent_snake_head,H,L);
     // printTHEarena(arenaSnake,H,L);
-    fill_walls(arenaWall,nbWalls,walls);
+    // fill_walls(arenaWall,nbWalls,walls);
     // printTHEarena(arenaWall,H,L);
     // printTHEarena(arena,H,L);
 
@@ -89,14 +89,11 @@ int main(){
     int*** arena_tab=init_arena_tab(H,L);
     int*** arenaWall_tab=init_arena_tab(H,L);
 
-    // print_arena_tab(arena_tab,H,L);
     fill_arena_tab(arenaWall_tab,nbWalls,walls);
+
     merge_arenas_tab(arena_tab,arenaWall_tab,arenaSnake,H,L);
+
     print_arena_tab(arena_tab,H,L);
-
-
-    // free_arena_tab(arenaWall_tab,H,L);
-    free_arena_tab(arena_tab,H,L);
 
     
     while(1){
@@ -107,13 +104,13 @@ int main(){
             position[0]=my_snake_head->x;
             position[1]=my_snake_head->y;
 
-            printf("OUUUAH TOUT MARCHE\n");
-            break;
+            // printf("OUUUAH TOUT MARCHE\n");
+            // break;
 
             fill_snake(arenaSnake,my_snake_head,oppenent_snake_head,H,L);
             // printTHEarena(arenaSnake,H,L);
-            merge_arenas(arenaSnake,arenaWall,arena,H,L);
-            printTHEarena(arenaWall,H,L);
+            merge_arenas_tab(arena_tab,arenaWall_tab,arenaSnake,H,L);
+            // printTHEarena(arenaWall,H,L);
             // displaySnake(oppenent_snake_head);
 
             // printf("your move : NORTH=0/EAST=1/SOUTH=2/WEST=3\n");
@@ -125,8 +122,10 @@ int main(){
             
             // moveInt=0;
 
-            moveInt=findMove(arena,position,H,L,(int)move);
-            scanf("%d",&moveInt);
+            printf("x:%d,y:%d\n",position[0],position[1]);
+
+            moveInt=find_move_v2(arena_tab,position,H,L,(int)move);
+            // scanf("%d",&moveInt);
             move =(t_move)moveInt;
                 
             Gamestate=sendMove(move);
@@ -168,8 +167,11 @@ int main(){
     }
 
     free_snake(my_snake_head);
+    free_snake(oppenent_snake_head);
     printf("free snake ok\n");
-    freeTHEarena(arena,H,L);
+    // freeTHEarena(arena,H,L);
+    // free_arena_tab(arenaWall_tab,H,L);
+    free_arena_tab(arena_tab,H,L);
     printf("free arena ok\n");
     free(walls);   
     printf("free walls ok\n");
