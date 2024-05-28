@@ -22,7 +22,7 @@ int main(){
     // scanf("%s",comment);
 
     printf("queueing\n");
-    waitForSnakeGame("TRAINING SUPER_PLAYER difficulty=3 timeout=100 seed=14 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
+    waitForSnakeGame("TRAINING SUPER_PLAYER difficulty=2 timeout=100 seed=15 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
     printf("game found\n");
 
     int H = ArenasizeY;
