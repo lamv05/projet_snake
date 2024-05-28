@@ -110,17 +110,46 @@ void fill_arena_tab(int*** arena,int nbWalls,int* walls){
     
 }
 
-void merge_arenas_tab(int*** arena,int*** arenaWall,int** arenaSnake,int H,int L){
+void merge_arenas_tab(int*** arena,int** arenaSnake,int H,int L,int nbWalls,int* walls){
+    refresh_arena_tab(arena,H,L);
+    fill_arena_tab(arena,nbWalls,walls);
     for(int i=0;i<L;i++){
         for(int j=0;j<H;j++){
-            arena[i][j]=arenaWall[i][j];
-            if (arenaSnake[i][j]!=0){
+            if (arenaSnake[i][j]==1){
+                // printf("x:%d,y:%d\n",i,j);
+                // printf("{%d,%d,%d,%d,%d}\n",arena[i][j][0],arena[i][j][1],arena[i][j][2],arena[i][j][3],arena[i][j][4]);
                 arena[i][j][4]=1;
             }
         }
     }
 }
 
+void refresh_arena_tab(int*** arena,int H,int L){
+    
+    for (int i=0;i<L;i++){ //fill with borders
+        for (int j=0;j<H;j++){
+            for(int k=0;k<5;k++){
+                if (i==0 && k==3){
+                    arena[i][j][k]=1;
+                }
+                else if(j==0 && k==0){
+                    arena[i][j][k]=1;
+                }
+                else if(i==L-1 && k==1){
+                    arena[i][j][k]=1;
+                }
+                else if(j==H-1 && k==2){
+                    arena[i][j][k]=1;
+                }
+                else{
+                    arena[i][j][k]=0;
+                }
+                
+                
+            }
+        }
+    }
+}
 // int version
 void printTHEarena(int** arena,int H,int L){
     for (int i=0;i<H;i++){

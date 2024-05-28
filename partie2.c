@@ -22,7 +22,7 @@ int main(){
     // scanf("%s",comment);
 
     printf("queueing\n");
-    waitForSnakeGame("TRAINING RANDOM_PLAYER difficulty=2 timeout=100 seed=14 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
+    waitForSnakeGame("TRAINING SUPER_PLAYER difficulty=3 timeout=100 seed=14 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
     printf("game found\n");
 
     int H = ArenasizeY;
@@ -84,22 +84,29 @@ int main(){
     // int oui=0;
     //scanf("%d",&oui);
 
-    printf("arena tab init\n");
+    // printf("arena tab init\n");
 
     int*** arena_tab=init_arena_tab(H,L);
-    int*** arenaWall_tab=init_arena_tab(H,L);
+    // print_arena_tab(arena_tab,H,L);
+    // int*** arenaWall_tab=init_arena_tab(H,L);
 
-    fill_arena_tab(arenaWall_tab,nbWalls,walls);
+    // fill_arena_tab(arenaWall_tab,nbWalls,walls);
 
-    merge_arenas_tab(arena_tab,arenaWall_tab,arenaSnake,H,L);
+    merge_arenas_tab(arena_tab,arenaSnake,H,L,nbWalls,walls);
+
+    // arena_tab[0][0][0]=55;
+    printTHEarena(arenaSnake,H,L);
+    // print_arena_tab(arenaWall_tab,H,L);
 
     print_arena_tab(arena_tab,H,L);
+    
 
     
     while(1){
         
         if (order==0){
             printArena();
+            
 
             position[0]=my_snake_head->x;
             position[1]=my_snake_head->y;
@@ -109,7 +116,8 @@ int main(){
 
             fill_snake(arenaSnake,my_snake_head,oppenent_snake_head,H,L);
             // printTHEarena(arenaSnake,H,L);
-            merge_arenas_tab(arena_tab,arenaWall_tab,arenaSnake,H,L);
+            // print_arena_tab(arena_tab,H,L);
+            merge_arenas_tab(arena_tab,arenaSnake,H,L,nbWalls,walls);
             // printTHEarena(arenaWall,H,L);
             // displaySnake(oppenent_snake_head);
 
@@ -122,7 +130,7 @@ int main(){
             
             // moveInt=0;
 
-            printf("x:%d,y:%d\n",position[0],position[1]);
+            printf("my snake head x:%d,y:%d\n",position[0],position[1]);
 
             moveInt=find_move_v2(arena_tab,position,H,L,(int)move);
             // scanf("%d",&moveInt);
