@@ -17,3 +17,5 @@ void fill_snake(int** arena,snakeCell* head,snakeCell* oppenent_headint,int H,in
 void displaySnake(snakeCell* head);
 
 void free_snake(snakeCell* head);
+
+snakeCell* copy_snake(snakeCell* head);

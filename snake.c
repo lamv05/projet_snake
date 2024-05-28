@@ -83,3 +83,28 @@ void free_snake(snakeCell* head){
     }
     free(head);
 }
+
+snakeCell* copy_snake(snakeCell* head){
+    snakeCell* copy_head = (struct snakeCell_*)malloc(sizeof(struct snakeCell_));
+    copy_head->x=head->x;
+    copy_head->y=head->y;
+    copy_head->move_cnt=head->move_cnt;
+
+    copy_head->nextCell=head->nextCell;
+    
+    snakeCell* copy_temp=copy_head;
+    snakeCell* head_tmp=head;
+    while(head_tmp->nextCell!=NULL){
+        
+        snakeCell* copy_node = (struct snakeCell_*)malloc(sizeof(struct snakeCell_));
+        copy_node->x=head_tmp->x;
+        copy_node->y=head_tmp->y;
+        copy_node->move_cnt=head_tmp->move_cnt;
+        copy_node->nextCell=head_tmp->nextCell;
+
+        head_tmp=head_tmp->nextCell;
+        copy_temp=copy_temp->nextCell;
+
+    }
+
+}

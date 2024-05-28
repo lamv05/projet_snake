@@ -1,8 +1,9 @@
 #include"snakeAPI.h"
 #include"arena.h"
+#include"snake.h"
 #include"ai.h"
 #include<stdlib.h>
-#include"snake.h"
+
 
 
 // runCGS Snake -p 1234 -w 8080  --no-email
@@ -63,7 +64,11 @@ int main(){
     snakeCell* my_snake_head=init_snake(position[0],position[1]);
     snakeCell* oppenent_snake_head=init_snake(position_opponent[0],position_opponent[1]);
     printf("init_snake ok\n");
+    snakeCell* copy=copy_snake(my_snake_head);
 
+    displaySnake(my_snake_head);
+    printf("1st print ok\n");
+    displaySnake(copy);
 
 
 
@@ -100,6 +105,8 @@ int main(){
 
     print_arena_tab(arena_tab,H,L);
     
+    
+    int* score_move=(int*)malloc(sizeof(int)*4);
 
     
     while(1){
@@ -129,11 +136,12 @@ int main(){
             // scanf("%d",&moveInt);
             
             // moveInt=0;
-
+            move=5;
             printf("my snake head x:%d,y:%d\n",position[0],position[1]);
 
-            moveInt=find_move_v2(arena_tab,position,H,L,(int)move);
-            // scanf("%d",&moveInt);
+            possible_move(arena_tab,my_snake_head,H,L,(int)move,score_move);
+            printf("%d,%d,%d,%d\n",score_move[0],score_move[1],score_move[2],score_move[3]);
+            scanf("%d",&moveInt);
             move =(t_move)moveInt;
                 
             Gamestate=sendMove(move);

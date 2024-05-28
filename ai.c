@@ -1,7 +1,9 @@
 #include<stdio.h>
+#include"snake.h"
 #include"ai.h"
 #include<stdlib.h>
 #include"snakeAPI.h"
+
 
 /* Rules :
 
@@ -131,7 +133,7 @@ int findMove(int** arena,int* position,int H,int L,int lastMoveInt){
     return max;
 }
 
-int find_move_v2(int*** arena,int* position,int H,int L,int lastMoveInt){
+void possible_move(int*** arena,snakeCell* head,int H,int L,int lastMoveInt,int* score_move){
 
     // if (lastMoveInt==0)
     //     printf("last move was north (0)\n");
@@ -145,6 +147,9 @@ int find_move_v2(int*** arena,int* position,int H,int L,int lastMoveInt){
     for (int i=0;i<4;i++){
         scoreMove[i]=1;
     }
+    int position[2];
+    position[0]=head->x;
+    position[1]=head->y;
     int* currentPosition=arena[position[0]][position[1]];
     
     
@@ -259,18 +264,18 @@ int find_move_v2(int*** arena,int* position,int H,int L,int lastMoveInt){
         }
     }
     else{
-        printf("else case\n");
-        printf("up position:{%d,%d,%d,%d,%d}\nright position:{%d,%d,%d,%d,%d}\ndown position:{%d,%d,%d,%d,%d}\nleft position:{%d,%d,%d,%d,%d}\n",
-            arena[position[0]][position[1]-1][0],arena[position[0]][position[1]-1][1],
-            arena[position[0]][position[1]-1][2],arena[position[0]][position[1]-1][3],
-            arena[position[0]][position[1]-1][4],arena[position[0]+1][position[1]][0],
-            arena[position[0]+1][position[1]][1],arena[position[0]+1][position[1]][2],
-            arena[position[0]+1][position[1]][3],arena[position[0]+1][position[1]][4],
-            arena[position[0]][position[1]+1][0],arena[position[0]][position[1]+1][1],
-            arena[position[0]][position[1]+1][2],arena[position[0]][position[1]+1][3],
-            arena[position[0]][position[1]+1][4],arena[position[0]-1][position[1]][0],
-            arena[position[0]-1][position[1]][1],arena[position[0]-1][position[1]][2],
-            arena[position[0]-1][position[1]][3],arena[position[0]-1][position[1]][4]);
+        // printf("else case\n");
+        // printf("up position:{%d,%d,%d,%d,%d}\nright position:{%d,%d,%d,%d,%d}\ndown position:{%d,%d,%d,%d,%d}\nleft position:{%d,%d,%d,%d,%d}\n",
+        //     arena[position[0]][position[1]-1][0],arena[position[0]][position[1]-1][1],
+        //     arena[position[0]][position[1]-1][2],arena[position[0]][position[1]-1][3],
+        //     arena[position[0]][position[1]-1][4],arena[position[0]+1][position[1]][0],
+        //     arena[position[0]+1][position[1]][1],arena[position[0]+1][position[1]][2],
+        //     arena[position[0]+1][position[1]][3],arena[position[0]+1][position[1]][4],
+        //     arena[position[0]][position[1]+1][0],arena[position[0]][position[1]+1][1],
+        //     arena[position[0]][position[1]+1][2],arena[position[0]][position[1]+1][3],
+        //     arena[position[0]][position[1]+1][4],arena[position[0]-1][position[1]][0],
+        //     arena[position[0]-1][position[1]][1],arena[position[0]-1][position[1]][2],
+        //     arena[position[0]-1][position[1]][3],arena[position[0]-1][position[1]][4]);
         // printf("up:x:%d,y:%d\nright:x:%d,y:%d\ndown:x:%d,y:%d\nleft:x:%d,y:%d\n",position[0]
         // ,position[1]-1,position[0]+1,position[1],position[0],position[1]+1,
         // position[0]-1,position[1]);
@@ -291,26 +296,38 @@ int find_move_v2(int*** arena,int* position,int H,int L,int lastMoveInt){
             scoreMove[3]=0; //left
         }
     }
-    
-
-    int max=scoreMove[0];
-    int max_indice=0;
     for (int i=0;i<4;i++){
-        if(scoreMove[i]>max){
-            max=scoreMove[i];
-            max_indice=i;
-        }
+        score_move[i]=scoreMove[i];
     }
-    printf("north:%d,east:%d,south:%d,west:%d\n",scoreMove[0],scoreMove[1],scoreMove[2],scoreMove[3]);
 
-    if (max_indice==0)
-        printf("ai would go north (0)\n");
-    else if (max_indice==1)
-        printf("ai would go east (1)\n");
-    else if (max_indice==2)
-        printf("ai would go south (2)\n");
-    else   
-        printf("ai would go west (3)\n");
+    // int max=scoreMove[0];
+    // int max_indice=0;
+    // for (int i=0;i<4;i++){
+    //     if(scoreMove[i]>max){
+    //         max=scoreMove[i];
+    //         max_indice=i;
+    //     }
+    // }
+    // printf("north:%d,east:%d,south:%d,west:%d\n",scoreMove[0],scoreMove[1],scoreMove[2],scoreMove[3]);
+
+    // if (max_indice==0)
+    //     printf("ai would go north (0)\n");
+    // else if (max_indice==1)
+    //     printf("ai would go east (1)\n");
+    // else if (max_indice==2)
+    //     printf("ai would go south (2)\n");
+    // else   
+    //     printf("ai would go west (3)\n");
     
-    return max_indice;
+    // return max_indice;
+}
+
+decision_tree_node* init_root(int*** arena,int* move_found){
+    decision_tree_node* root=(struct decision_tree_node_*)malloc(sizeof(struct decision_tree_node_));
+    root->arena=arena;
+    root->move_found=move_found;
+    for(int i=0;i<4;i++){
+        root->next_moves[i]=NULL;
+    }
+    return root;
 }
