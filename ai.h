@@ -10,13 +10,22 @@ typedef struct decision_tree_node_{
     int** arena_snake;
     snakeCell* my_head;
     snakeCell* oppenent_head;
-    struct decision_tree_node_* next_moves[4]; //{north,east,south,west}
     int last_move;
+    int* walls;
+    int nbWalls;
+    int H;
+    int L;
+    struct decision_tree_node_* next_moves[4]; //{north,east,south,west}
+    int depth;
 
 }decision_tree_node;
 
-decision_tree_node* init_root(int*** arena,int* move_found);
+void new_node(int*** arena,int* move_found,int** arena_snake,snakeCell* my_head,snakeCell* oppenent_head,int* walls,int nbWalls,int H,int L,int last_move);
 
-int search_move();
+
+int search_move(decision_tree_node* root,int*** arena,int* move_found,int** arena_snake,
+                snakeCell* my_head,snakeCell* oppenent_head,int* walls,int nbWalls,int H,int L,int depth,int last_move);
 
 void free_tree();
+
+decision_tree_node* init_root(void);

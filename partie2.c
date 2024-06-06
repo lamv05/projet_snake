@@ -23,7 +23,7 @@ int main(){
     // scanf("%s",comment);
 
     printf("queueing\n");
-    waitForSnakeGame("TRAINING SUPER_PLAYER difficulty=2 timeout=100 seed=15 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
+    waitForSnakeGame("TRAINING RANDOM_PLAYER difficulty=2 timeout=100 seed=14 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
     printf("game found\n");
 
     int H = ArenasizeY;
@@ -106,8 +106,14 @@ int main(){
     print_arena_tab(arena_tab,H,L);
     
     
-    int* score_move=(int*)malloc(sizeof(int)*4);
+    int* move_found=(int*)malloc(sizeof(int)*4);
 
+    decision_tree_node* root=init_root();
+    int** tab;
+    tab=(int**)malloc(sizeof(int*)*L);
+    for (int i=0;i<L;i++){
+        tab[i]=(int*)malloc(sizeof(int)*H);
+    }
     
     while(1){
         
@@ -127,6 +133,10 @@ int main(){
             merge_arenas_tab(arena_tab,arenaSnake,H,L,nbWalls,walls);
             // printTHEarena(arenaWall,H,L);
             // displaySnake(oppenent_snake_head);
+            // displaySnake(my_snake_head);
+            // snakeCell* copy=copy_snake(my_snake_head);
+
+            // displaySnake(copy);
 
             // printf("your move : NORTH=0/EAST=1/SOUTH=2/WEST=3\n");
             
@@ -137,11 +147,14 @@ int main(){
             
             // moveInt=0;
             move=5;
-            printf("my snake head x:%d,y:%d\n",position[0],position[1]);
+            // printf("my snake head x:%d,y:%d\n",position[0],position[1]);
 
-            possible_move(arena_tab,my_snake_head,H,L,(int)move,score_move);
-            printf("%d,%d,%d,%d\n",score_move[0],score_move[1],score_move[2],score_move[3]);
-            scanf("%d",&moveInt);
+            // possible_move(arena_tab,my_snake_head,H,L,(int)move,score_move);
+            // printf("%d,%d,%d,%d\n",score_move[0],score_move[1],score_move[2],score_move[3]);
+            moveInt=search_move(root,arena_tab,move_found,arenaSnake,my_snake_head,oppenent_snake_head,walls,nbWalls,H,L,2,5);
+            printf("%d\n",moveInt);
+            // scanf("%d",&moveInt);
+            break;
             move =(t_move)moveInt;
                 
             Gamestate=sendMove(move);
@@ -153,8 +166,6 @@ int main(){
             snake_move(oppenent_snake_head,(int)moveOpponent);
             
             
-            
-
         }
 
         if (Gamestate==1) {
@@ -184,12 +195,13 @@ int main(){
 
     free_snake(my_snake_head);
     free_snake(oppenent_snake_head);
-    printf("free snake ok\n");
+    // printf("free snake ok\n");
     // freeTHEarena(arena,H,L);
     // free_arena_tab(arenaWall_tab,H,L);
     free_arena_tab(arena_tab,H,L);
-    printf("free arena ok\n");
+    // printf("free arena ok\n");
     free(walls);   
-    printf("free walls ok\n");
+    // printf("free walls ok\n");
+    printf("FREE OK\n");
     closeConnection();  
 }
