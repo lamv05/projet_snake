@@ -382,6 +382,9 @@ int search_move(decision_tree_node* root,int*** arena,int* move_found,int** aren
                             //recursion
 
                             search_move(root->next_moves[i],new_arena,new_move_found,new_arenaSnake,copy,oppenent_head,walls,nbWalls,H,L,depth-1,i);
+                            freeTHEarena(new_arenaSnake,H,L);
+                            free_snake(copy);
+                            free(new_move_found);
 
                         }
 
