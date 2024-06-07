@@ -19,3 +19,5 @@ void displaySnake(snakeCell* head);
 void free_snake(snakeCell* head);
 
 snakeCell* copy_snake(snakeCell* head);
+
+void copy_snake2(snakeCell* head,snakeCell* desti);
