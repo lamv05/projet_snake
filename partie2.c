@@ -23,7 +23,7 @@ int main(){
     // scanf("%s",comment);
 
     printf("queueing\n");
-    waitForSnakeGame("TRAINING RANDOM_PLAYER difficulty=2 timeout=100 seed=14 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
+    waitForSnakeGame("TRAINING SUPER_PLAYER difficulty=2 timeout=100 seed=14 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
     printf("game found\n");
 
     int H = ArenasizeY;
@@ -107,54 +107,33 @@ int main(){
     
     
     int* move_found=(int*)malloc(sizeof(int)*4);
+    
 
-    decision_tree_node* root=init_root();
-    int** tab;
-    tab=(int**)malloc(sizeof(int*)*L);
-    for (int i=0;i<L;i++){
-        tab[i]=(int*)malloc(sizeof(int)*H);
-    }
+    move=5;
+    // decision_tree_node* root=init_root();
+    
     
     while(1){
         
         if (order==0){
             printArena();
-            
+            decision_tree_node* root=init_root();
 
             position[0]=my_snake_head->x;
             position[1]=my_snake_head->y;
 
-            // printf("OUUUAH TOUT MARCHE\n");
-            // break;
-
             fill_snake(arenaSnake,my_snake_head,oppenent_snake_head,H,L);
-            // printTHEarena(arenaSnake,H,L);
-            // print_arena_tab(arena_tab,H,L);
+            
             merge_arenas_tab(arena_tab,arenaSnake,H,L,nbWalls,walls);
-            // printTHEarena(arenaWall,H,L);
-            // displaySnake(oppenent_snake_head);
-            // displaySnake(my_snake_head);
-            // snakeCell* copy=copy_snake(my_snake_head);
-
-            // displaySnake(copy);
-
-            // printf("your move : NORTH=0/EAST=1/SOUTH=2/WEST=3\n");
             
-
-            // scanf("%d",(int*)&move);
-
-            // scanf("%d",&moveInt);
             
-            // moveInt=0;
-            move=5;
-            // printf("my snake head x:%d,y:%d\n",position[0],position[1]);
-
-            // possible_move(arena_tab,my_snake_head,H,L,(int)move,score_move);
-            // printf("%d,%d,%d,%d\n",score_move[0],score_move[1],score_move[2],score_move[3]);
-            moveInt=search_move(root,arena_tab,move_found,arenaSnake,my_snake_head,oppenent_snake_head,walls,nbWalls,H,L,2,5);
+            possible_move(arena_tab,my_snake_head,H,L,(int)move,move_found);
+            printf("%d,%d,%d,%d\n",move_found[0],move_found[1],move_found[2],move_found[3]);
+            moveInt=choose_move(root,arena_tab,move_found,arenaSnake,my_snake_head,oppenent_snake_head,walls,nbWalls,H,L,1,5);
             printf("%d\n",moveInt);
             // scanf("%d",&moveInt);
-            break;
+            // free_tree(root);
+            
             move =(t_move)moveInt;
                 
             Gamestate=sendMove(move);
@@ -195,9 +174,6 @@ int main(){
 
     free_snake(my_snake_head);
     free_snake(oppenent_snake_head);
-    // printf("free snake ok\n");
-    // freeTHEarena(arena,H,L);
-    // free_arena_tab(arenaWall_tab,H,L);
     free_arena_tab(arena_tab,H,L);
     // printf("free arena ok\n");
     free(walls);   

@@ -6,22 +6,6 @@
 #include"snakeAPI.h"
 
 
-/* Rules :
-
-1 : do not turn back
-
-
-
-methode :
-
-calcul de score
-
-
-
-
-
-*/
-
 int findMove(int** arena,int* position,int H,int L,int lastMoveInt){
     if (lastMoveInt==0)
         printf("last move was north (0)\n");
@@ -344,12 +328,15 @@ void new_node(int*** arena,int* move_found,int** arena_snake,snakeCell* my_head,
 }
 
 int search_move(decision_tree_node* root,int*** arena,int* move_found,int** arena_snake,snakeCell* my_head,snakeCell* oppenent_head,int* walls,int nbWalls,int H,int L,int depth,int last_move){
-            int* score_move=(int*)malloc(sizeof(int)*4);
+            int score_move=1;
             new_node(arena,move_found,arena_snake,my_head,oppenent_head,walls,nbWalls,H,L,last_move);
-            printf("x:%d,y:%d\n",my_head->x,my_head->y);
+            // printf("x:%d,y:%d\n",my_head->x,my_head->y);
             // possible_move(root->arena,root->my_head,root->H,root->L,root->last_move,root->move_found);
-            printf("%d,%d,%d,%d\n",move_found[0],move_found[1],move_found[2],move_found[3]);
-            if (depth>0){ // mettre une cond avec %2 pour savoir c'est le tour de qui
+            // printf("%d,%d,%d,%d\n",move_found[0],move_found[1],move_found[2],move_found[3]);
+            if (depth==0){
+                return 1;
+            }
+            else if (depth>0){ // mettre une cond avec %2 pour savoir c'est le tour de qui
                 // if (depth%2==1){ //P1
                     // printf("P1\n");
                     for (int i=0;i<4;i++){
@@ -371,7 +358,7 @@ int search_move(decision_tree_node* root,int*** arena,int* move_found,int** aren
 
                             //add node
 
-                            printf("\ndepth : %d\nmove:%d\n",depth,i);
+                            // printf("\ndepth : %d\nmove:%d\n",depth,i);
                             root->next_moves[i]=init_root();
                             // printf("new root ok \n\n\n");
 
@@ -381,91 +368,79 @@ int search_move(decision_tree_node* root,int*** arena,int* move_found,int** aren
 
                             //recursion
 
-                            search_move(root->next_moves[i],new_arena,new_move_found,new_arenaSnake,copy,oppenent_head,walls,nbWalls,H,L,depth-1,i);
+                            score_move=score_move+search_move(root->next_moves[i],new_arena,new_move_found,new_arenaSnake,copy,oppenent_head,walls,nbWalls,H,L,depth-1,i);
+                            
+                            free(copy);
+                            free_arena_tab(new_arena,H,L);
                             freeTHEarena(new_arenaSnake,H,L);
-                            free_snake(copy);
-                            free(new_move_found);
-
                         }
-
                     }
-
-            }
-            // printf("\ndepth : %d\n",depth);
-            // printf("%d,%d,%d,%d\n",score_move[0],score_move[1],score_move[2],score_move[3]);
-            // if (depth==0){
-            //         printf("bottom tree\n\n");
-            //         // return 1;
-            //     }
-            // else if (depth==2){
-            //     // trouver le max
-            //     int max=score_move[0];
-            //     int max_indice=0;
-            //     for (int i=0;i<4;i++){
-            //         if(score_move[i]>max){
-            //             max=score_move[i];
-            //             max_indice=i;
-            //         }
-            //     }
-            //     return max_indice;
-            // }
-            // else{
-            //     // sommer les possibilités
-            //     int value_returned;
-            //     for (int j=0;j<4;j++){
-            //         if (score_move[j]==1){
-            //             value_returned++;
-            //         }
-            //     }
-            //     return value_returned;
-            // }
-
-
-
-
-
-
-                // }
-            //     else{ //P2
-            //         printf("P2\n");
-            //         for (int i=0;i<4;i++){
-            //             if (move_found[i]==1){
-
-            //                 //copy snake and update position
-                            
-            //                 snakeCell* copy=copy_snake(my_head);
-            //                 snake_move(copy,i);
-            //                 // printf("copy update snake ok\n");
-            //                 // displaySnake(copy);
-                            
-            //                 //copy and update arenas
-
-            //                 int** new_arenaSnake=init_arena(H,L);
-            //                 fill_snake(new_arenaSnake,copy,oppenent_head,H,L);
-            //                 int*** new_arena=init_arena_tab(H,L);
-            //                 merge_arenas_tab(new_arena,new_arenaSnake,H,L,nbWalls,walls);
-
-            //                 //add node
-
-            //                 root->next_moves[i]=init_root();
-            //                 // printf("new root ok oui \n");
-
-            //                 //recursion
-            //                 printf("depth : %d\n",depth);
-            //                 search_move(root->next_moves[i],new_arena,move_found,arena_snake,copy,oppenent_head,walls,nbWalls,H,L,depth-1,i);
-
-            //             }
-
-            //         }
-            //     }
-            // }
-            
-
-            
-            
+                    // printf("\ndepth : %d\nmove sum:%d\n",depth,score_move);
+                    return score_move;
+            }         
 }
 
 decision_tree_node* init_root(){
     decision_tree_node* root=(struct decision_tree_node_*)malloc(sizeof(struct decision_tree_node_));
     return root;
+}
+
+int choose_move(decision_tree_node* root,int*** arena,int* move_found,int** arena_snake,snakeCell* my_head,snakeCell* oppenent_head,int* walls,int nbWalls,int H,int L,int depth,int last_move){
+    int tab[4]={0,0,0,0};
+    // printf("%d,%d,%d,%d\n",move_found[0],move_found[1],move_found[2],move_found[3]);
+    for (int i=0;i<4;i++){
+        if (move_found[i]==1){
+            // root->next_moves[i]=init_root();
+
+            //copy snake and update position
+                            
+            snakeCell* copy=copy_snake(my_head);
+            snake_move(copy,i);
+            // printf("copy update snake ok\n");
+            // displaySnake(copy);
+            
+            //copy and update arenas
+
+            int** new_arenaSnake=init_arena(H,L);
+            fill_snake(new_arenaSnake,copy,oppenent_head,H,L);
+            int*** new_arena=init_arena_tab(H,L);
+            merge_arenas_tab(new_arena,new_arenaSnake,H,L,nbWalls,walls);
+
+            //add node
+
+            // printf("\ndepth : %d\nmove:%d\n",depth,i);
+            root->next_moves[i]=init_root();
+            // printf("new root ok \n\n\n");
+
+            // new score_move
+
+            int* new_move_found=(int*)malloc(sizeof(int)*4);
+
+            tab[i]=search_move(root->next_moves[i],new_arena,new_move_found,new_arenaSnake,copy,oppenent_head,walls,nbWalls,H,L,depth,i);
+
+            free(copy);
+            free_arena_tab(new_arena,H,L);
+            freeTHEarena(new_arenaSnake,H,L);
+        }
+    }
+    printf("%d,%d,%d,%d\n",tab[0],tab[1],tab[2],tab[3]);
+    int max=tab[0];
+    int max_indice=0;
+    for (int i=0;i<4;i++){
+        if(tab[i]>max){
+            max=tab[i];
+            max_indice=i;
+        }
+    }
+    return max_indice;
+
+}
+
+void free_tree(decision_tree_node* root){
+    for(int i=0;i<4;i++){
+        if (root->next_moves[i]!=NULL){
+            free_tree(root->next_moves[i]);
+        }
+    }
+    free(root);
 }
