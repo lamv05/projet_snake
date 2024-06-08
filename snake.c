@@ -8,6 +8,7 @@ snakeCell* init_snake(int x,int y){
     head->y=y;
     head->move_cnt = 1;
     head->nextCell = NULL;
+    return head;
 }
 
 void snake_move(snakeCell* head,int move){
@@ -49,6 +50,7 @@ void snake_move(snakeCell* head,int move){
     }
     // printf("snake update ok\n");
     if(head->move_cnt==0){
+        // printf("snake grandi\n");
         head->move_cnt=10;
         add_cell(head, last_x_tmp,last_y_tmp);
 
@@ -63,14 +65,15 @@ void add_cell(snakeCell* head,int x,int y){
         snakeCell* new_cell = (struct snakeCell_*)malloc(sizeof(struct snakeCell_));
         new_cell->x=x;
         new_cell->y=y;
-        new_cell->move_cnt = 9;
+        new_cell->move_cnt = 99;
         new_cell->nextCell = NULL;
         head->nextCell = new_cell;
+        // printf("cell added %p\n",new_cell);
     }
 }
 
 void displaySnake(snakeCell* head){
-    printf("cell coords \nx : %d\ny : %d\nmove_cnt = %d\nnext_cell : %p\n",head->x,head->y,head->move_cnt,head->nextCell);
+    printf("cell coords x : %d\ty : %d\tcell address : %p\tmove_cnt = %d\tnext_cell : %p\n\n",head->x,head->y,head,head->move_cnt,head->nextCell);
     if (head->nextCell!=NULL){
         displaySnake(head->nextCell);
     }
@@ -91,19 +94,29 @@ snakeCell* copy_snake(snakeCell* head){
     copy_head->x=head->x; 
     copy_head->y=head->y;
     copy_head->move_cnt=head->move_cnt;
-    copy_head->nextCell=head->nextCell;
+    copy_head->nextCell=NULL;
     snakeCell* head_tmp=head;
+    snakeCell* copy_tmp=copy_head;
+
     
     while(head_tmp->nextCell!=NULL){
-        snakeCell* copy_node = (struct snakeCell_*)malloc(sizeof(struct snakeCell_));
-        copy_node->x=head_tmp->nextCell->x;
-        copy_node->y=head_tmp->nextCell->y;
-        copy_node->move_cnt=head_tmp->nextCell->move_cnt;
-        copy_node->nextCell=head_tmp->nextCell->nextCell;
+
+        copy_tmp->nextCell=copy_node(head_tmp);
 
         head_tmp=head_tmp->nextCell;
+        copy_tmp=copy_tmp->nextCell;
     }
     return copy_head;
+}
+
+
+snakeCell* copy_node(snakeCell* cell){
+    snakeCell* new_cell = (struct snakeCell_*)malloc(sizeof(struct snakeCell_));
+    new_cell->x=cell->nextCell->x;
+    new_cell->y=cell->nextCell->y;
+    new_cell->move_cnt=cell->nextCell->move_cnt;
+    new_cell->nextCell=NULL;
+    return new_cell;
 }
 
 void copy_snake2(snakeCell* head,snakeCell* desti){
@@ -127,4 +140,15 @@ void copy_snake2(snakeCell* head,snakeCell* desti){
         head_tmp=head_tmp->nextCell;
     }
     
+}
+
+void remove_last_cell(snakeCell* head){
+    if(head->nextCell->nextCell!=NULL){
+        remove_last_cell(head->nextCell);
+    }
+    else{
+        printf("free %p\n",head->nextCell);
+        free(head->nextCell);
+        head->nextCell=NULL;
+    }
 }

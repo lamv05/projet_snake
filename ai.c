@@ -120,14 +120,6 @@ int findMove(int** arena,int* position,int H,int L,int lastMoveInt){
 
 void possible_move(int*** arena,snakeCell* head,int H,int L,int lastMoveInt,int* score_move){
 
-    // if (lastMoveInt==0)
-    //     printf("last move was north (0)\n");
-    // else if (lastMoveInt==1)
-    //     printf("last move was east (1)\n");
-    // else if (lastMoveInt==2)
-    //     printf("last move was south (2)\n");
-    // else   
-    //     printf("last move was west (3)\n");
     int scoreMove[4]; // [north,east,south,west]
     for (int i=0;i<4;i++){
         scoreMove[i]=1;
@@ -249,25 +241,6 @@ void possible_move(int*** arena,snakeCell* head,int H,int L,int lastMoveInt,int*
         }
     }
     else{
-        // printf("else case\n");
-        // printf("up position:{%d,%d,%d,%d,%d}\nright position:{%d,%d,%d,%d,%d}\ndown position:{%d,%d,%d,%d,%d}\nleft position:{%d,%d,%d,%d,%d}\n",
-        //     arena[position[0]][position[1]-1][0],arena[position[0]][position[1]-1][1],
-        //     arena[position[0]][position[1]-1][2],arena[position[0]][position[1]-1][3],
-        //     arena[position[0]][position[1]-1][4],arena[position[0]+1][position[1]][0],
-        //     arena[position[0]+1][position[1]][1],arena[position[0]+1][position[1]][2],
-        //     arena[position[0]+1][position[1]][3],arena[position[0]+1][position[1]][4],
-        //     arena[position[0]][position[1]+1][0],arena[position[0]][position[1]+1][1],
-        //     arena[position[0]][position[1]+1][2],arena[position[0]][position[1]+1][3],
-        //     arena[position[0]][position[1]+1][4],arena[position[0]-1][position[1]][0],
-        //     arena[position[0]-1][position[1]][1],arena[position[0]-1][position[1]][2],
-        //     arena[position[0]-1][position[1]][3],arena[position[0]-1][position[1]][4]);
-        // printf("up:x:%d,y:%d\nright:x:%d,y:%d\ndown:x:%d,y:%d\nleft:x:%d,y:%d\n",position[0]
-        // ,position[1]-1,position[0]+1,position[1],position[0],position[1]+1,
-        // position[0]-1,position[1]);
-        // printf("up:%d\nright:%d\ndown:%d\nleft:%d\n",arena[position[0]][position[1]-1][4]
-        // ,arena[position[0]+1][position[1]][4],arena[position[0]][position[1]+1][4]
-        // ,arena[position[0]-1][position[1]][4]);
-        
         if (arena[position[0]][position[1]-1][4]){
             scoreMove[0]=0; //up
         }
@@ -285,49 +258,31 @@ void possible_move(int*** arena,snakeCell* head,int H,int L,int lastMoveInt,int*
     for (int i=0;i<4;i++){
         score_move[i]=scoreMove[i];
     }
-
-    // int max=scoreMove[0];
-    // int max_indice=0;
-    // for (int i=0;i<4;i++){
-    //     if(scoreMove[i]>max){
-    //         max=scoreMove[i];
-    //         max_indice=i;
-    //     }
-    // }
-    // printf("north:%d,east:%d,south:%d,west:%d\n",scoreMove[0],scoreMove[1],scoreMove[2],scoreMove[3]);
-
-    // if (max_indice==0)
-    //     printf("ai would go north (0)\n");
-    // else if (max_indice==1)
-    //     printf("ai would go east (1)\n");
-    // else if (max_indice==2)
-    //     printf("ai would go south (2)\n");
-    // else   
-    //     printf("ai would go west (3)\n");
-    
-    // return max_indice;
 }
 
-void new_node(decision_tree_node* root,snakeCell* my_head,snakeCell* oppenent_head,int* walls,int nbWalls,int H,int L,int last_move){
+void new_node(decision_tree_node* root,snakeCell* my_head,snakeCell* oppenent_head,int* walls,int nbWalls,int H,int L,int last_move,int flag){
     root->move_found=(int*)malloc(sizeof(int)*4);
     root->last_move=last_move;
 
-    root->my_head=copy_snake(my_head);
-    snake_move(root->my_head,last_move);
-    // root->my_head->move_cnt=10;
-    displaySnake(root->my_head);
-    //pb quand le snake grandi 
-    //le snake degenère
-            
+    if (flag==0){
+        root->my_head=my_head;
+    }
+    else{
+        root->my_head=copy_snake(my_head);
+    }
+
+    if (flag==1){
+        snake_move(root->my_head,last_move);
+    }
 
     root->arena_snake=init_arena(H,L);
     fill_snake(root->arena_snake,root->my_head,oppenent_head,H,L);
-    printTHEarena(root->arena_snake,H,L);
          
     root->arena=init_arena_tab(H,L);
     merge_arenas_tab(root->arena,root->arena_snake,H,L,nbWalls,walls);
 
     possible_move(root->arena,root->my_head,H,L,root->last_move,root->move_found);
+
     for(int i=0;i<4;i++){
         if (root->move_found[i]==1){
             root->next_moves[i]=init_root();
@@ -341,31 +296,28 @@ void new_node(decision_tree_node* root,snakeCell* my_head,snakeCell* oppenent_he
 
 int search_move(decision_tree_node* root,snakeCell* my_head,snakeCell* oppenent_head,int* walls,int nbWalls,int H,int L,int depth,int last_move){
             int score_move=0;
+            new_node(root,my_head,oppenent_head,walls,nbWalls,H,L,last_move,1);
             
-            new_node(root,my_head,oppenent_head,walls,nbWalls,H,L,last_move);
-
             if (depth==0){
                 for(int i=0;i<4;i++){
                     if(root->move_found[i]==1){
                         score_move++;
                     }
                 }
-                free(root->my_head);
-                return score_move;
             }
             else if (depth>0){ 
-                    for (int i=0;i<4;i++){
-                        if (root->move_found[i]==1){
+                for (int i=0;i<4;i++){
+                    if (root->move_found[i]==1){
 
-                            //recursion
-
-                            score_move=score_move+search_move(root->next_moves[i],root->my_head,oppenent_head,walls,nbWalls,H,L,depth-1,i);
-                            
-                            //free root->next move[i]
-                        }
+                        score_move=score_move+search_move(root->next_moves[i],root->my_head,oppenent_head,walls,nbWalls,H,L,depth-1,i);
+                        
                     }
-                    return score_move;
-            }         
+                }
+            }
+            free(root->move_found);
+            free_snake(root->my_head);
+            free(root);
+            return score_move;         
 }
 
 decision_tree_node* init_root(){
@@ -373,21 +325,21 @@ decision_tree_node* init_root(){
     return root;
 }
 
-int choose_move(decision_tree_node* root,int* move_found,snakeCell* my_head,snakeCell* oppenent_head,int* walls,int nbWalls,int H,int L,int depth){
+int choose_move(decision_tree_node* root,snakeCell* my_head,snakeCell* oppenent_head,int* walls,int nbWalls,int H,int L,int depth,int last_move){
     int tab[4]={0,0,0,0};
 
+    new_node(root,my_head,oppenent_head,walls,nbWalls,H,L,last_move,0);
     for (int i=0;i<4;i++){
-        if (move_found[i]==1){
-                        
-            root->next_moves[i]=init_root();
-
-            tab[i]=search_move(root->next_moves[i],my_head,oppenent_head,walls,nbWalls,H,L,depth,i);
-
-            //free root->next move[i]
+        if (root->move_found[i]==1){
+      
+            tab[i]=search_move(root->next_moves[i],root->my_head,oppenent_head,walls,nbWalls,H,L,depth,i);            
             
         }
     }
-    printf("%d,%d,%d,%d\n",tab[0],tab[1],tab[2],tab[3]);
+    free(root->move_found);
+    free(root);
+    
+    printf("\n%d,%d,%d,%d\n",tab[0],tab[1],tab[2],tab[3]);
     int max=tab[0];
     int max_indice=0;
     for (int i=0;i<4;i++){

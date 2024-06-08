@@ -21,7 +21,7 @@ int main(){
     // scanf("%s",comment);
 
     printf("queueing\n");
-    waitForSnakeGame("TRAINING SUPER_PLAYER difficulty=2 timeout=100 seed=14 start=0",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
+    waitForSnakeGame("TRAINING SUPER_PLAYER timeout=10 ",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
     printf("game found\n");
 
     int H = ArenasizeY;
@@ -75,30 +75,26 @@ int main(){
     print_arena_tab(arena_tab,H,L);
     
     
-    int* move_found=(int*)malloc(sizeof(int)*4);
     move=5;    
+
+    int turn=1;
+    int depth=3;
     
     while(1){
-        
         if (order==0){
+            printf("\nTurn %d\n",turn++);
             printArena();
+
+            if(turn%10==0 && depth < 10){
+                depth++;
+                printf("depth increased\n");
+            }
             
-            // new_node(root,my_snake_head,oppenent_snake_head,walls,nbWalls,H,L,moveInt);
             decision_tree_node* root=init_root();
-            position[0]=my_snake_head->x;
-            position[1]=my_snake_head->y;
 
-            fill_snake(arenaSnake,my_snake_head,oppenent_snake_head,H,L);
-            
-            merge_arenas_tab(arena_tab,arenaSnake,H,L,nbWalls,walls);
-            
-            possible_move(arena_tab,my_snake_head,H,L,(int)move,move_found);
-            printf("%d,%d,%d,%d\n",move_found[0],move_found[1],move_found[2],move_found[3]);
-
-            
-            moveInt=choose_move(root,move_found,my_snake_head,oppenent_snake_head,walls,nbWalls,H,L,2);
+            moveInt=choose_move(root,my_snake_head,oppenent_snake_head,walls,nbWalls,H,L,depth,(int)move);
             printf("%d\n",moveInt);
-            // scanf("%d",&moveInt);
+            
             free(root);
             
             move =(t_move)moveInt;
@@ -140,10 +136,9 @@ int main(){
 
     free_snake(my_snake_head);
     free_snake(oppenent_snake_head);
+    freeTHEarena(arenaSnake,H,L);
     free_arena_tab(arena_tab,H,L);
-    // printf("free arena ok\n");
     free(walls);   
-    // printf("free walls ok\n");
     printf("FREE OK\n");
     closeConnection();  
 }
