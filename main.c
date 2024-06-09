@@ -1,6 +1,6 @@
 #include"snakeAPI.h"
-#include"arena.h"
 #include"snake.h"
+#include"arena.h"
 #include"ai.h"
 #include<stdlib.h>
 
@@ -28,8 +28,7 @@ int main(){
     int L = ArenasizeX;
     int** arenaSnake;
 
-
-     printf("game info : %s, %d*%d, %d walls\n", gameName,ArenasizeX,ArenasizeY,nbWalls);
+    printf("game info : %s, %d*%d, %d walls\n", gameName,ArenasizeX,ArenasizeY,nbWalls);
     
     int position[2]={0,0}; 
     int position_opponent[2]={0,0};
@@ -84,24 +83,16 @@ int main(){
         if (order==0){
             printf("\nTurn %d\n",turn++);
             printArena();
-
-            // if(turn%10==0 && depth < 10){
-            //     depth++;
-            //     printf("depth increased\n");
-            // }
             
             decision_tree_node* root=init_root();
 
             moveInt=choose_move(root,my_snake_head,oppenent_snake_head,walls,nbWalls,H,L,depth,(int)move);
             printf("%d\n",moveInt);
             
-            // free(root);
-            
             move =(t_move)moveInt;
                 
             Gamestate=sendMove(move);
             snake_move(my_snake_head,moveInt);
-                        
         }
         else{
             Gamestate=getMove(&moveOpponent);

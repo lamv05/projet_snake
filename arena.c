@@ -1,16 +1,8 @@
 #include<stdio.h>
+#include"snake.h"
 #include"arena.h"
 #include<stdlib.h>
-#include"snake.h"
 
-typedef struct cell_{
-    int wall_up;
-    int wall_down;
-    int wall_right;
-    int wall_left;
-    int occupied;
-
-}cell;
 
 // int tab[5] version
 
@@ -180,19 +172,6 @@ int** init_arena(int H,int L){
     return arena;
 }
 
-void fill_walls(int** arena,int nbWalls,int* walls){
-
-    for (int i=0;i<4*(nbWalls);i=i+2){ //4*(nbWalls)
-            
-            // arena[walls[i+1]][walls[i]] = 1; 
-            // printf("%d %d\n",walls[i],walls[i+1]);
-            arena[walls[i]][walls[i+1]]++; 
-            // wallprinted++;
-            
-        }
-        // printf("wall printed %d/%d\n",wallprinted/2,nbWalls);
-    
-}
 
 void fill_snake(int** arena,snakeCell* head,snakeCell* oppenent_head,int H,int L){
     refresh_arena(arena,H,L);
@@ -224,17 +203,6 @@ void refresh_arena(int** arena,int H,int L){
     for (int i=0;i<L;i++){
         for (int j=0;j<H;j++){
             arena[i][j]=0;
-        }
-    }
-}
-
-void merge_arenas(int** arenaSnake,int** arenaWall,int** arena,int H,int L){
-    for(int i=0;i<L;i++){
-        for(int j=0;j<H;j++){
-            arena[i][j]=arenaWall[i][j];
-            if (arenaSnake[i][j]!=0){
-                arena[i][j]+=arenaSnake[i][j];
-            }
         }
     }
 }

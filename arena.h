@@ -4,11 +4,9 @@ int** init_arena(int H,int L);
 
 void freeTHEarena(int** arena,int H,int L);
 
-void fill_walls(int** arena,int nbWalls,int* walls);
+void fill_snake(int** arena,snakeCell* head,snakeCell* oppenent_head,int H,int L);
 
 void refresh_arena(int** arena,int H,int L);
-
-void merge_arenas(int** arenaSnake,int** arenaWall,int** arena,int H,int L);
 
 int*** init_arena_tab(int H,int L);
 

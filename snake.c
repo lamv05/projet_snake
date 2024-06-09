@@ -118,37 +118,3 @@ snakeCell* copy_node(snakeCell* cell){
     new_cell->nextCell=NULL;
     return new_cell;
 }
-
-void copy_snake2(snakeCell* head,snakeCell* desti){
-   
-    desti->x=head->x;
-    desti->y=head->y;
-    desti->move_cnt=head->move_cnt;
-    desti->nextCell=NULL;
-    snakeCell* head_tmp=head;
-    snakeCell* desti_tmp=desti;
-    
-    while(head_tmp->nextCell!=NULL){
-        snakeCell* copy_node = (struct snakeCell_*)malloc(sizeof(struct snakeCell_));
-        copy_node->x=head_tmp->nextCell->x;
-        copy_node->y=head_tmp->nextCell->y;
-        copy_node->move_cnt=head_tmp->nextCell->move_cnt;
-        copy_node->nextCell=NULL;
-
-        desti_tmp->nextCell=copy_node;
-        desti_tmp=desti_tmp->nextCell;
-        head_tmp=head_tmp->nextCell;
-    }
-    
-}
-
-void remove_last_cell(snakeCell* head){
-    if(head->nextCell->nextCell!=NULL){
-        remove_last_cell(head->nextCell);
-    }
-    else{
-        printf("free %p\n",head->nextCell);
-        free(head->nextCell);
-        head->nextCell=NULL;
-    }
-}
