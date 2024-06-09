@@ -21,7 +21,7 @@ int main(){
     // scanf("%s",comment);
 
     printf("queueing\n");
-    waitForSnakeGame("TRAINING SUPER_PLAYER timeout=10 ",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
+    waitForSnakeGame("TRAINING SUPER_PLAYER timeout=10 difficulty=2 seed=12",gameName,&ArenasizeX,&ArenasizeY,&nbWalls);
     printf("game found\n");
 
     int H = ArenasizeY;
@@ -78,24 +78,24 @@ int main(){
     move=5;    
 
     int turn=1;
-    int depth=3;
+    int depth=12;
     
     while(1){
         if (order==0){
             printf("\nTurn %d\n",turn++);
             printArena();
 
-            if(turn%10==0 && depth < 10){
-                depth++;
-                printf("depth increased\n");
-            }
+            // if(turn%10==0 && depth < 10){
+            //     depth++;
+            //     printf("depth increased\n");
+            // }
             
             decision_tree_node* root=init_root();
 
             moveInt=choose_move(root,my_snake_head,oppenent_snake_head,walls,nbWalls,H,L,depth,(int)move);
             printf("%d\n",moveInt);
             
-            free(root);
+            // free(root);
             
             move =(t_move)moveInt;
                 

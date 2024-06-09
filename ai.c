@@ -334,6 +334,10 @@ int choose_move(decision_tree_node* root,snakeCell* my_head,snakeCell* oppenent_
       
             tab[i]=search_move(root->next_moves[i],root->my_head,oppenent_head,walls,nbWalls,H,L,depth,i);            
             
+            if (tab[i]>100000){
+                printf("%d %d\n",i,tab[i]);
+                return i;
+            }
         }
     }
     free(root->move_found);
